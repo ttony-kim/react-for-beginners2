@@ -1,38 +1,30 @@
 import { useState, useEffect } from "react";
-
-function App() {
-  const [counter, setValue] = useState(0);
-  const [keyword, setKeyword] = useState("");
-  const onClick = () => setValue((prev) => prev + 1);
-  const onChange = (event) => {
-    setKeyword(event.target.value);
-  };
-
+function Hello() {
+  // Hello 컴포넌트가 그려지지 않을 때는 'destroy' 됐기 때문에 아래 코드가 실행 되지 않는다.
+  // Hello 컴포넌트가 그려질때는 '생성'되는 것이기 때문에 아래 코드가 실행 된다.
   useEffect(() => {
-    console.log("I run only once");
+    console.log("CREATED :)");
+    // cleanup function: component가 destroy 될때 실행시켜주는 함수
+    return () => console.log("DESTROYED :(");
   }, []);
 
-  useEffect(() => {
-    console.log("I run when 'keyword' change");
-  }, [keyword]);
-
-  useEffect(() => {
-    console.log("I run when 'counter' change");
-  }, [counter]);
-
-  useEffect(() => {
-    console.log("I run when keyword & counter change");
-  }, [counter, keyword]);
+  // function byFn() {
+  //   console.log("bye :(");
+  // }
+  // function hiFn() {
+  //   console.log("created :)");
+  //   return byFn;
+  // }
+  // useEffect(hiFn, []);
+  return <h1>Hello</h1>;
+}
+function App() {
+  const [showing, setShowing] = useState(false);
+  const onClick = () => setShowing((prev) => !prev);
   return (
     <div>
-      <input
-        value={keyword}
-        onChange={onChange}
-        type="text"
-        placeholder="Search here..."
-      />
-      <h1>{counter}</h1>
-      <button onClick={onClick}>click me</button>
+      {showing ? <Hello /> : null}
+      <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
     </div>
   );
 }
