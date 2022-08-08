@@ -1,0 +1,10 @@
+.table {
+  border-spacing: 50px
+}
+
+.loading {
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
