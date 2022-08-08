@@ -1,40 +1,41 @@
 import { useState, useEffect } from "react";
 function App() {
-  const [toDo, setToDo] = useState("");
-  const [toDos, setToDos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [coins, setCoins] = useState([]);
+  const [value, setValue] = useState(0);
+  const [selected, setSelected] = useState(0);
+  useEffect(() => {
+    fetch("https://api.coinpaprika.com/v1/tickers")
+      .then((response) => response.json())
+      .then((json) => {
+        setCoins(json);
+        setLoading(false);
+      });
+  }, []);
   const onChange = (event) => {
-    console.log(event.target.value);
-    setToDo(event.target.value);
+    setValue(event.target.value);
   };
-  const onSubmit = (event) => {
-    event.preventDefault();
-    if (toDo === "") {
-      return;
-    }
-    setToDos((currentArray) => {
-      return [toDo, ...currentArray];
-    });
-    setToDo("");
+  const onSelectChange = (event) => {
+    setSelected(event.target.value);
   };
-
   return (
     <div>
-      <h1>My To Dos ({toDos.length})</h1>
-      <form onSubmit={onSubmit}>
-        <input
-          value={toDo}
-          onChange={onChange}
-          type="text"
-          placeholder="Write your to do..."
-        />
-        <button>Add To Do</button>
-      </form>
-      <hr />
-      <ul>
-        {toDos.map((item, index) => {
-          return <li key={index}>{item}</li>;
-        })}
-      </ul>
+      <h1>The Coins! {loading ? "" : `(${coins.length})`}</h1>
+      {loading ? (
+        <strong>Loading...</strong>
+      ) : (
+        <div>
+          <input type="number" value={value} onChange={onChange}></input>
+          <h3>${value * selected}</h3>
+          <select onChange={onSelectChange} value={selected}>
+            {coins.map((coin) => (
+              <option key={coin.id} value={coin.quotes.USD.price}>
+                {coin.name} ({coin.symbol}) : ${coin.quotes.USD.price}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
     </div>
   );
 }
