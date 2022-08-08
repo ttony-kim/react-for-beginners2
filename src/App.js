@@ -6,7 +6,7 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/movie">
+        <Route path="/movie/:id">
           <Detail></Detail>
         </Route>
         {/* 유저가 이 경로에 있으면 Home Route를 렌더링해준다. */}
